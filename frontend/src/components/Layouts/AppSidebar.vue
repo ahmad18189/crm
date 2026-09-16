@@ -126,7 +126,7 @@
             </template>
           </SidebarItem>
           <SidebarItem
-            v-if="isOnboardingStepsCompleted"
+            v-if="false"
             :label="__('Help')"
             @click="toggleHelpModal"
           >
@@ -154,7 +154,7 @@
   <template v-if="!mobile">
     <Settings />
     <HelpModal
-      v-if="showHelpModal"
+      v-if="false"
       v-model="showHelpModal"
       v-model:articles="articles"
       :logo="CRMLogo"

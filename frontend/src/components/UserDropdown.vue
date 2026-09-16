@@ -2,38 +2,33 @@
   <Dropdown :options="dropdownItems" v-bind="$attrs">
     <template #default="{ open }">
       <button
-        class="flex h-12 items-center rounded-md py-2 duration-300 ease-in-out"
+        class="flex rounded-md py-2 duration-300 ease-in-out"
         :class="
           isCollapsed
-            ? 'w-auto px-0'
+            ? 'h-12 w-auto items-center justify-center overflow-hidden px-0'
             : open
-              ? 'w-full px-2 bg-surface-elevation-3 shadow-sm'
-              : 'w-full px-2 hover:bg-surface-gray-2'
+              ? 'min-h-12 w-full items-start px-2 bg-surface-elevation-3 shadow-sm'
+              : 'min-h-12 w-full items-start px-2 hover:bg-surface-gray-2'
         "
       >
-        <BrandLogo v-model="brand" class="h-8 max-w-16 flex-shrink-0" />
+        <BrandLogo v-model="brand" class="h-8 max-w-8 flex-shrink-0" />
         <div
-          class="flex flex-1 flex-col text-left duration-300 ease-in-out truncate"
-          :class="
-            isCollapsed
-              ? 'ml-0 w-0 overflow-hidden opacity-0'
-              : 'ml-2 w-auto opacity-100'
-          "
+          class="flex min-w-0 flex-1 flex-col text-left duration-300 ease-in-out"
+          :class="isCollapsed ? 'hidden' : 'ml-2 w-auto opacity-100'"
         >
-          <div class="text-base-medium leading-none text-ink-gray-9 truncate">
+          <div class="text-base-medium leading-snug text-ink-gray-9 break-words">
             {{ __(brand.name || 'CRM') }}
           </div>
-          <div class="mt-1 text-sm leading-none text-ink-gray-7 truncate">
-            {{ user.full_name }}
+          <div
+            v-if="userSubtitle"
+            class="mt-1 text-sm leading-snug text-ink-gray-7 break-words"
+          >
+            {{ userSubtitle }}
           </div>
         </div>
         <div
-          class="duration-300 ease-in-out"
-          :class="
-            isCollapsed
-              ? 'ml-0 w-0 overflow-hidden opacity-0'
-              : 'ml-2 w-auto opacity-100'
-          "
+          class="flex shrink-0 items-center self-center duration-300 ease-in-out"
+          :class="isCollapsed ? 'hidden' : 'ms-1 w-auto opacity-100'"
         >
           <span
             class="lucide-chevron-down size-4 text-ink-gray-5"
@@ -67,6 +62,12 @@ const { logout } = sessionStore()
 const { getUser } = usersStore()
 
 const user = computed(() => getUser() || {})
+const userSubtitle = computed(() => {
+  const name = String(user.value.full_name || '').trim()
+  const brandName = String(brand.name || '').trim()
+  if (!name || name === brandName) return ''
+  return name
+})
 
 const apps = createResource({
   url: 'frappe.apps.get_apps',

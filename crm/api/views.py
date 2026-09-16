@@ -3,7 +3,11 @@ from pypika import Criterion
 
 
 @frappe.whitelist()
-def get_views(doctype: str):
+def get_views(doctype=None):
+	# Prebuilt CRM SPA (Pinia store setup) sometimes posts `doctype` as a dict.
+	if not isinstance(doctype, str):
+		doctype = ""
+
 	View = frappe.qb.DocType("CRM View Settings")
 	query = (
 		frappe.qb.from_(View)
